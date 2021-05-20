@@ -1,8 +1,14 @@
 const path = require('path');
+const glob = require('glob');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
+const PurgecssPlugin = require('purgecss-webpack-plugin')
+
+const PATHS = {
+  src: path.join(__dirname, 'src')
+}
 
 module.exports = {
 	entry: './src/index.js',
@@ -39,7 +45,6 @@ module.exports = {
 						options: {
 							postcssOptions: {
 								plugins:  [
-									require("precss"),
 									require("autoprefixer")
 								]
 							}
@@ -101,5 +106,8 @@ module.exports = {
                 }
             ]
         }),
+        new PurgecssPlugin({
+	      paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }),
+	    }),
 	]
 };
